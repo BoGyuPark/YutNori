@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
@@ -17,8 +19,10 @@ public class BoardMain extends JFrame implements ActionListener{
 //	JLabel[] MarkChar = new JLabel[40];
 	JButton[] MarkMalPos = new JButton[40];
 	JLabel[] MarkChar = new JLabel[40];
-	ArrayList<Integer> P1NextIdx;
-	ArrayList<Integer> P2NextIdx;
+	ArrayList<IntString> P1NextIdx;
+	ArrayList<IntString> P2NextIdx;
+//	ArrayList<Integer> P1NextIdx;
+//	ArrayList<Integer> P2NextIdx;
 	
 	int tempCnt=0;
 	
@@ -93,7 +97,7 @@ public class BoardMain extends JFrame implements ActionListener{
 		setLayout(null);
 		
 		contentPane = this.getContentPane();
-		
+		contentPane.addKeyListener(new MyKeyListener());
 		MoveActionListener MAListener = new MoveActionListener();
 		
 		//캐릭터 선택할때 마크 : MarkChar, 이동할 위치 마크 버튼 세팅 : MarkMalPos
@@ -138,7 +142,7 @@ public class BoardMain extends JFrame implements ActionListener{
 		//배경 이미지
 		ImageIcon boardImg = new ImageIcon("GUI\\BigBoard.png");
 		ImageIcon YutPanImg = new ImageIcon("GUI\\NewYutPan.png");
-		ImageIcon YutChatImg = new ImageIcon("GUI\\Han.jpg");
+		ImageIcon YutChatImg = new ImageIcon("GUI\\New_kim.jpg");
 		
 		JLabel labelImageBoardImg = new JLabel(boardImg);
 		JLabel labelImageYutPanImg = new JLabel(YutPanImg);
@@ -188,6 +192,8 @@ public class BoardMain extends JFrame implements ActionListener{
 		setLocation(50,20);
 		setSize(1250,1000);
 		setVisible(true);
+
+		contentPane.requestFocus();
 
 	}
 	
@@ -262,15 +268,19 @@ public class BoardMain extends JFrame implements ActionListener{
 	    
 	    //Player One
 	    if(PlayerFlag == true) {   	
-	    	//선택할 수 있는 말을 표시해주자
-			//말리스트를 돌면서 말 위치에 화살표 표시해주자
+	    	
+	    	//선택할 수 있는 말을 표시해주자	//말리스트를 돌면서 말 위치에 화살표 표시해주자
 	    	MarkSelectChar(true,1);
 			
 			if(CheckRemainCnt(playerOne)) {	 	//남은 기회 Check
 				//윷 던지기 버튼 클릭
 		    	if(name.equals("윷 던지기")) {
 		 	    	for(int i=0; i<4; i++) {
-		 	    		yutResult[i] = random.nextInt(2);
+		 	    		
+		 	    		//60% 확률로 뒷면이 나온다.
+		 	    		int tempNum = random.nextInt(100);
+		 	    		yutResult[i] = (tempNum>=60 ? 1 : 0 );
+		 	    		
 		 	    		if(yutResult[i]== 0) yutBackCnt++;
 		 		    	// 0일때 아랫면, 1일때 윗면
 		 		    	if(i == 0 && yutResult[i] == 0) {
@@ -289,16 +299,23 @@ public class BoardMain extends JFrame implements ActionListener{
 		 	    		YutResultString = YutStringList[yutBackCnt];
 		 	    	}
 		 	    	
-		 	    	if(tempCnt == 0) {
-			 	    	YutResultString = "개";
-		 	    	}else if(tempCnt == 2) {
-			 	    	YutResultString = "개";
-		 	    	}else if(tempCnt == 4) {
-			 	    	YutResultString = "걸";
-		 	    	}else if(tempCnt == 6) {
-			 	    	YutResultString = "도";
-		 	    	}
-		 	    	tempCnt++;
+//		 	    	if(tempCnt == 0) {
+//			 	    	YutResultString = "모";
+//		 	    	}else if(tempCnt == 1) {
+//			 	    	YutResultString = "모";
+//		 	    	}else if(tempCnt == 2) {
+//			 	    	YutResultString = "모";
+//		 	    	}
+//		 	    	else if(tempCnt == 3) {
+//			 	    	YutResultString = "모";
+//		 	    	}
+//		 	    	else if(tempCnt == 4) {
+//			 	    	YutResultString = "걸";
+//		 	    	}
+//		 	    	else if(tempCnt == 5) {
+//			 	    	YutResultString = "빽도";
+//		 	    	}
+//		 	    	tempCnt++;
 
 		 	    	
 		 	    	SituationTextArea.append(YutResultString + "\n");
@@ -329,7 +346,11 @@ public class BoardMain extends JFrame implements ActionListener{
 				//윷 던지기 버튼 클릭
 		    	if(name.equals("윷 던지기")) {
 		 	    	for(int i=0; i<4; i++) {
-		 	    		yutResult[i] = random.nextInt(2);
+		 	    		
+		 	    		int tempNum = random.nextInt(100);
+		 	    		yutResult[i] = (tempNum>=60 ? 1 : 0 );
+
+		 	    		//yutResult[i] = random.nextInt(2);
 		 	    		if(yutResult[i]== 0) yutBackCnt++;
 		 		    	// 0일때 아랫면, 1일때 윗면
 		 		    	if(i == 0 && yutResult[i] == 0) {
@@ -349,17 +370,23 @@ public class BoardMain extends JFrame implements ActionListener{
 		 	    	}
 		 	    	
 		 	    	
-		 	    	if(tempCnt == 1) {
-			 	    	YutResultString = "빽도";
-		 	    	}else if(tempCnt == 3) {
-			 	    	YutResultString = "빽도";
-		 	    	}else if(tempCnt == 5) {
-			 	    	YutResultString = "빽도";
-		 	    	}
-		 	    	else if(tempCnt == 7) {
-			 	    	YutResultString = "걸";
-		 	    	}
-		 	    	tempCnt++;
+//		 	    	if(tempCnt == 1) {
+//			 	    	YutResultString = "걸";
+//		 	    	}else if(tempCnt == 3) {
+//			 	    	YutResultString = "걸";
+//		 	    	}else if(tempCnt == 5) {
+//			 	    	YutResultString = "개";
+//		 	    	}
+//		 	    	else if(tempCnt == 7) {
+//			 	    	YutResultString = "빽도";
+//		 	    	}
+//		 	    	else if(tempCnt == 9) {
+//			 	    	YutResultString = "빽도";
+//		 	    	}
+//		 	    	else if(tempCnt == 11) {
+//			 	    	YutResultString = "빽도";
+//		 	    	}
+//		 	    	tempCnt++;
 
 		 	    	SituationTextArea.append(YutResultString + "\n");
 		 	    	SituationTextArea.setCaretPosition(SituationTextArea.getDocument().getLength());  // 맨아래로 스크롤한다.
@@ -401,10 +428,11 @@ public class BoardMain extends JFrame implements ActionListener{
 				
 				//같은 말과 겹치지 않는 경우
 				if( NextMalNum == -1) {
-					
+					SituationTextArea.append("P1 NextMalNum : " + NextMalNum + "\n");
+
 					//같은 말과 겹치지 않지만 상대방 말을 잡는 경우
-					if(OpponentNum != -1) 
-					{
+					if(OpponentNum != -1 && nextIdx != 38) 
+					{						
 						//상대방 말을 대기 말 위치로 이동 시켜준다
 						mal.PlayerTwoList[OpponentNum].setLocation(mal.OriginPlayerTwoMalPosition[0][OpponentNum], 
 								mal.OriginPlayerTwoMalPosition[1][OpponentNum]);
@@ -444,7 +472,8 @@ public class BoardMain extends JFrame implements ActionListener{
 				}
 				//다음 위치에 말이 겹치면
 				else {
-					
+					SituationTextArea.append("NOT P1 NextMalNum : " + NextMalNum + "\n");
+
 					//원래 말판에 있는 말에 추가
 					mal.P1Sum[NextMalNum].add(CurP1Idx);
 					
@@ -456,7 +485,7 @@ public class BoardMain extends JFrame implements ActionListener{
 					
 					//추가된 갯수에 따라 원래 말판에 있는 말의 이미지를 변경
 //					SituationTextArea.append("원래 있던 말 번호: " + NextMalNum + "\n");
-//					SituationTextArea.append("합쳐진 갯수: " + mal.P1Sum[NextMalNum].size() + "\n");
+					SituationTextArea.append("합쳐진 갯수: " + mal.P1Sum[NextMalNum].size() + "\n");
 					mal.PlayerOneGoalIn[CurP1Idx] = -1;		//합쳐진 의미로 -1
 					
 					mal.PlayerOneList[CurP1Idx].setLocation(mal.OriginPlayerOneMalPosition[0][CurP1Idx],
@@ -468,21 +497,37 @@ public class BoardMain extends JFrame implements ActionListener{
 					mal.PlayerOneList[CurP1Idx].setVisible(false);
 					mal.PlayerOneList[NextMalNum].setIcon(mal.P1_Mal_Sum[mal.P1Sum[NextMalNum].size()+ 1]);
 					
+					if(nextIdx == 38) {
+						
+					}
+					
 				}
 				
-						
-				//내가 고른 윷 결과 확인
-				String[] t = {"도","개","걸","윷","모","빽도"};
-				int i;
-				for (i=0; i<6; i++) {
-					if(NextPossibleMalPos[CurSelP1MalPos][i]==nextIdx) {
-						//SituationTextArea.append("P1이 움직인 윷 결과 : " + t[i] + "\n");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//문제점 : 윷 결과에 따라 같은 말위치일 경우 윷결과가 구분이 안된다.
+				//내가 고른 윷 결과 확인		
+				
+				//P1NextIdx[CurSelP1MalPos];
+				for(IntString j : P1NextIdx) {
+					if(j.PosNum == nextIdx) {
+						//내가 고른 윷 결과 제거
+						playerOne.YutResultList.remove(j.Yut);
+						SituationTextArea.append("P1이 움직인 윷 결과 : " + j.Yut + "\n");
 						break;
 					}
 				}
 				
-				//내가 고른 윷 결과 제거
-				playerOne.YutResultList.remove(t[i]);
+//				String[] t = {"도","개","걸","윷","모","빽도"};
+//				int i;
+//				for (i=0; i<6; i++) {
+//					if(NextPossibleMalPos[CurSelP1MalPos][i]==nextIdx) {
+//						SituationTextArea.append("P1이 움직인 윷 결과 : " + t[i] + "\n");
+//						break;
+//					}
+//				}
+				
+//				//내가 고른 윷 결과 제거
+//				playerOne.YutResultList.remove(t[i]);
 				
 				//윷 결과 제거 후 윷결과들 출력
 				SituationTextArea.append("P1 남은 윷 : ");
@@ -497,9 +542,13 @@ public class BoardMain extends JFrame implements ActionListener{
 				
 				
 				//가능했던 좌표 마크를 없앤다.
-	 	    	for(int possiblePos : P1NextIdx) {
-	 	    		MarkMalPos[possiblePos].setVisible(false);
+				for(IntString possiblePos : P1NextIdx) {
+	 	    		MarkMalPos[possiblePos.PosNum].setVisible(false);
 	 	    	}
+//	 	    	for(int possiblePos : P1NextIdx) {
+//	 	    		MarkMalPos[possiblePos].setVisible(false);
+//	 	    	}
+				
 				
 				//P1이 Goal in
 				if(nextIdx == 38) {
@@ -509,10 +558,11 @@ public class BoardMain extends JFrame implements ActionListener{
 					for(int j : mal.P1Sum[CurP1Idx]) {
 						mal.PlayerOneGoalIn[j] = 1;
 					}
+					System.out.println("CurGoalInCnt : "+CurGoalInCnt+", playerOne.GoalInMalCnt : " + playerOne.GoalInMalCnt);
 				}
 				
 				//종료 화면
-				if(playerOne.GoalInMalCnt == 4) {
+				if(playerOne.GoalInMalCnt >= 4) {
 					SituationTextArea.append("Player 1 Win!!!!!!!!!!!!!!!!  \n");
 					JOptionPane.showMessageDialog(null, "Player 1 Win!!", "윷놀이 승자", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -543,9 +593,9 @@ public class BoardMain extends JFrame implements ActionListener{
 				int OpponentNum = OppOverLapCheck(nextIdx, mal.PlayerOneMalPosition);
 
 				if( NextMalNum == -1) {
-					
+					SituationTextArea.append("P2 NextMalNum : " + NextMalNum + "\n");
 					//같은 말과 겹치지 않지만 상대방 말을 잡는 경우
-					if(OpponentNum != -1) 
+					if(OpponentNum != -1 && nextIdx!=38) 
 					{
 						//상대방 말을 대기 말 위치로 이동 시켜준다
 						mal.PlayerOneList[OpponentNum].setLocation(mal.OriginPlayerOneMalPosition[0][OpponentNum], 
@@ -583,7 +633,8 @@ public class BoardMain extends JFrame implements ActionListener{
 				}
 				//다음 위치에 말이 겹치면
 				else {
-					
+					SituationTextArea.append("NOT P2 NextMalNum : " + NextMalNum + "\n");
+
 					//원래 말판에 있는 말에 추가
 					mal.P2Sum[NextMalNum].add(CurP2Idx);
 					
@@ -592,9 +643,10 @@ public class BoardMain extends JFrame implements ActionListener{
 						mal.P2Sum[NextMalNum].add(j);
 					}
 					
+					mal.P2Sum[CurP2Idx].clear();
 					//추가된 갯수에 따라 원래 말판에 있는 말의 이미지를 변경
 //					SituationTextArea.append("원래 있던 말 번호: " + NextMalNum + "\n");
-//					SituationTextArea.append("합쳐진 갯수: " + mal.P2Sum[NextMalNum].size() + "\n");
+					SituationTextArea.append("합쳐진 갯수: " + mal.P2Sum[NextMalNum].size() + "\n");
 					
 					mal.PlayerTwoGoalIn[CurP2Idx] = -1;		//합쳐진 의미로 -1
 					
@@ -612,17 +664,26 @@ public class BoardMain extends JFrame implements ActionListener{
 
 				/////////////////////////////////////////////////////////////////////////////////////////
 				//내가 고른 윷 결과 확인
-				String[] t = {"도","개","걸","윷","모","빽도"};
-				int i;
-				for (i=0; i<6; i++) {
-					if(NextPossibleMalPos[CurSelP2MalPos][i]==nextIdx) {
-						//SituationTextArea.append("P2이 움직인 윷 결과 : " + t[i] + "\n");
+				for(IntString j : P2NextIdx) {
+					if(j.PosNum == nextIdx) {
+						//내가 고른 윷 결과 제거
+						playerTwo.YutResultList.remove(j.Yut);
+						SituationTextArea.append("P2이 움직인 윷 결과 : " + j.Yut + "\n");
 						break;
 					}
 				}
 				
-				//내가 고른 윷 결과 제거
-				playerTwo.YutResultList.remove(t[i]);
+				//				String[] t = {"도","개","걸","윷","모","빽도"};
+//				int i;
+//				for (i=0; i<6; i++) {
+//					if(NextPossibleMalPos[CurSelP2MalPos][i]==nextIdx) {
+//						//SituationTextArea.append("P2이 움직인 윷 결과 : " + t[i] + "\n");
+//						break;
+//					}
+//				}
+//				
+//				//내가 고른 윷 결과 제거
+//				playerTwo.YutResultList.remove(t[i]);
 				
 				//윷 결과 제거 후 윷결과들 출력
 				SituationTextArea.append("P2 남은 윷 : ");
@@ -637,9 +698,12 @@ public class BoardMain extends JFrame implements ActionListener{
 				//SituationTextArea.append("P2이 움직인 곳 : " + nextIdx + "\n");
 				
 				//가능했던 좌표 마크를 없앤다.
-	 	    	for(int possiblePos : P2NextIdx) {
-	 	    		MarkMalPos[possiblePos].setVisible(false);
+	 	    	for(IntString possiblePos : P2NextIdx) {
+	 	    		MarkMalPos[possiblePos.PosNum].setVisible(false);
 	 	    	}
+//	 	    	for(int possiblePos : P2NextIdx) {
+//	 	    		MarkMalPos[possiblePos].setVisible(false);
+//	 	    	}
 				
 				//P2이 Goal in
 				if(nextIdx==38) {					
@@ -649,10 +713,12 @@ public class BoardMain extends JFrame implements ActionListener{
 					for(int j : mal.P2Sum[CurP2Idx]) {
 						mal.PlayerTwoGoalIn[j] = 1;
 					}
+					System.out.println("CurGoalInCnt : "+CurGoalInCnt+", playerTwo.GoalInMalCnt : " + playerTwo.GoalInMalCnt);
+
 				}
 				
 				//종료 화면
-				if(playerTwo.GoalInMalCnt == 4) {
+				if(playerTwo.GoalInMalCnt >= 4) {
 					SituationTextArea.append("Player 2 Win!!!!!!!!!!!!!!!!  \n");
 					JOptionPane.showMessageDialog(null, "Player 2 Win!!", "윷놀이 승자", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -687,9 +753,17 @@ public class BoardMain extends JFrame implements ActionListener{
 	
 	//다음 이동할 위치에 이미 플레이어가 있는 경우 체크
 	private int OverLapCheck(int NextPlayerIdx, int PlayerMalPosition[][]) {
-		// TODO Auto-generated method stub
+		System.out.println("NextPlayerIdx : " + NextPlayerIdx);
+		System.out.println("NextPlayerIdx의 x : " + BoardPosition[0][NextPlayerIdx] + 
+				", NextPlayerIdx의 y : " + BoardPosition[1][NextPlayerIdx]);
+		
 		for(int i=0; i<4; i++) {
-			if(NextPlayerIdx == i) continue;
+			System.out.println("PlayerMalPosition의 x : " + PlayerMalPosition[0][i] + 
+					", PlayerMalPosition의 y : " + PlayerMalPosition[1][i]);
+		}
+		
+		for(int i=0; i<4; i++) {
+			//if(NextPlayerIdx == i) continue;
 			if(BoardPosition[0][NextPlayerIdx] == PlayerMalPosition[0][i]
 					&& BoardPosition[1][NextPlayerIdx] == PlayerMalPosition[1][i] ) {
 				return i;
@@ -699,7 +773,6 @@ public class BoardMain extends JFrame implements ActionListener{
 	}
 	
 	public int OppOverLapCheck(int NextPlayerIdx, int[][] PlayerMalPosition) {
-		// TODO Auto-generated method stub
 		for(int i=0; i<4; i++) {
 			if(BoardPosition[0][NextPlayerIdx] == PlayerMalPosition[0][i]
 					&& BoardPosition[1][NextPlayerIdx] == PlayerMalPosition[1][i] ) {
@@ -708,7 +781,64 @@ public class BoardMain extends JFrame implements ActionListener{
 		}
 		return -1;
 	}
+	
+	
+	class MyKeyListener implements KeyListener{
+		public void keyTyped(KeyEvent e) {
+			
+		}
 
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+			int keyCode = e.getKeyCode();
+            
+            switch(keyCode){
+            	case KeyEvent.VK_E:
+            		System.out.println("E키 누름!!");
+            		//E키를 누르면 선택한 말의 이동가능한 표시 해제, 
+            		//선택가능한 말 표시 해준다.
+            		
+            		//플레이어 1일때
+            		if(PlayerFlag == true) 
+            		{
+            			//가능했던 좌표 마크를 없앤다.
+        				for(IntString possiblePos : P1NextIdx) {
+        	 	    		MarkMalPos[possiblePos.PosNum].setVisible(false);
+        	 	    	}
+        				
+                		//선택가능한 말 표시 해준다.
+        				MarkSelectChar(true, 1);
+            		}
+            		//플레이어 2일때
+            		else 
+            		{
+            			//가능했던 좌표 마크를 없앤다.
+        				for(IntString possiblePos : P2NextIdx) {
+        	 	    		MarkMalPos[possiblePos.PosNum].setVisible(false);
+        	 	    	}
+                		//선택가능한 말 표시 해준다.
+        				MarkSelectChar(true, 2);
+            		}
+            		
+            		break;
+            	
+//            	case KeyEvent.VK_Q:	
+//					System.exit(0);
+//					break;
+            }
+
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	//플레이어 1의 말을 선택하는 경우
 	private class P1ActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			
@@ -739,10 +869,15 @@ public class BoardMain extends JFrame implements ActionListener{
 	 	    	P1NextIdx = possiblePosition(CurIdx, playerOne.YutResultList,1);		//현재 말의 좌표, 윷결과값
 	 	    	
 	 	    	int cnt=0;		//이동할수 있는 경우가 하나도 없는 경우 
-	 	    	for(int possiblePos : P1NextIdx) {
-	 	    		MarkMalPos[possiblePos].setVisible(true);
+	 	    	for(IntString possiblePos : P1NextIdx) {
+	 	    		MarkMalPos[possiblePos.PosNum].setVisible(true);
 	 	    		cnt++;
 	 	    	}
+	 	    	contentPane.requestFocus();
+//	 	    	for(int possiblePos : P1NextIdx) {
+//	 	    		MarkMalPos[possiblePos].setVisible(true);
+//	 	    		cnt++;
+//	 	    	}
 	 	    	
 	 	    	//처음부터 빽도인 경우
 	 	    	if(cnt == 0) {
@@ -784,10 +919,16 @@ public class BoardMain extends JFrame implements ActionListener{
 	 	    	//선택한 말이 가능한 위치를 알려주자
 	 	    	P2NextIdx = possiblePosition(CurIdx, playerTwo.YutResultList,2);		//현재 말의 좌표, 윷결과값
 	 	    	int cnt=0;
-	 	    	for(int possiblePos : P2NextIdx) {
-	 	    		MarkMalPos[possiblePos].setVisible(true);
+	 	    	for(IntString possiblePos : P2NextIdx) {
+	 	    		MarkMalPos[possiblePos.PosNum].setVisible(true);
 	 	    		cnt++;
 	 	    	}
+	 	    	contentPane.requestFocus();
+
+//	 	    	for(int possiblePos : P2NextIdx) {
+//	 	    		MarkMalPos[possiblePos].setVisible(true);
+//	 	    		cnt++;
+//	 	    	}
 	 	    	
 	 	    	//처음부터 빽도인 경우
 	 	    	if(cnt == 0) {
@@ -836,12 +977,11 @@ public class BoardMain extends JFrame implements ActionListener{
 		
 	}
 
-	private ArrayList<Integer> possiblePosition(int curIdx, ArrayList<String> yutResultList, int PlayerNum) {
+	private ArrayList<IntString> possiblePosition(int curIdx, ArrayList<String> yutResultList, int PlayerNum) {
 
-		ArrayList<Integer> possible = new ArrayList<>();
+		ArrayList<IntString> possible = new ArrayList<>();
 		//System.out.println("curIdx : "+curIdx);
 		for(String value : yutResultList) {
-		    		
     		if(PlayerNum==1) {
     			// P1
         		//말의 위치가 대기 중이라면 기준이 0
@@ -851,13 +991,25 @@ public class BoardMain extends JFrame implements ActionListener{
         		//빽도 인경우
         		if(YutHash.get(value) == 5) {
         			for(int i=0; i<2; i++) {
+        			    IntString is = new IntString();
         				if(NextPossibleMalPos[curIdx][YutHash.get(value) + i] > -1 ) {
-                			possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)+ i]);
+        					is.PosNum = NextPossibleMalPos[curIdx][YutHash.get(value)+ i];
+        					is.Yut = value;
+        					if(curIdx==22) {
+            					System.out.println("i값 : " + i + " " + is.PosNum + " " + is.Yut);
+            				}
+        					possible.add(is);
+                			//possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)+ i]);
             			}
         			}
         			
         		}else {
-            		possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)]);
+        		    IntString is = new IntString();
+
+        			is.PosNum = NextPossibleMalPos[curIdx][YutHash.get(value)];
+					is.Yut = value;
+					possible.add(is);
+            		//possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)]);
         		}
     			
     		}else {
@@ -871,12 +1023,22 @@ public class BoardMain extends JFrame implements ActionListener{
         		if(YutHash.get(value) == 5) {
         			for(int i=0; i<2; i++) {
         				if(NextPossibleMalPos[curIdx][YutHash.get(value) + i] > -1 ) {
-                			possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)+ i]);
+        				    IntString is = new IntString();
+
+        					is.PosNum = NextPossibleMalPos[curIdx][YutHash.get(value)+ i];
+        					is.Yut = value;
+        					possible.add(is);
+                			//possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)+ i]);
             			}
         			}
         			
         		}else {
-            		possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)]);
+        		    IntString is = new IntString();
+
+        			is.PosNum = NextPossibleMalPos[curIdx][YutHash.get(value)];
+					is.Yut = value;
+					possible.add(is);
+            		//possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)]);
         		}
 
     		}
@@ -897,6 +1059,68 @@ public class BoardMain extends JFrame implements ActionListener{
 		
 		return possible;
 	}
+	
+//	private ArrayList<Integer> possiblePosition(int curIdx, ArrayList<String> yutResultList, int PlayerNum) {
+//
+//		ArrayList<Integer> possible = new ArrayList<>();
+//		//System.out.println("curIdx : "+curIdx);
+//		for(String value : yutResultList) {
+//		    		
+//    		if(PlayerNum==1) {
+//    			// P1
+//        		//말의 위치가 대기 중이라면 기준이 0
+//        		if(curIdx == 30 || curIdx == 31 || curIdx == 32 || curIdx == 33) {
+//        			curIdx = 0;
+//        		}
+//        		//빽도 인경우
+//        		if(YutHash.get(value) == 5) {
+//        			for(int i=0; i<2; i++) {
+//        				if(NextPossibleMalPos[curIdx][YutHash.get(value) + i] > -1 ) {
+//                			possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)+ i]);
+//            			}
+//        			}
+//        			
+//        		}else {
+//            		possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)]);
+//        		}
+//    			
+//    		}else {
+//    			// P2
+//        		//말의 위치가 대기 중이라면 기준이 0
+//        		if(curIdx == 34 || curIdx == 35 || curIdx == 36 || curIdx == 37) {
+//        			curIdx = 0;
+//        		}
+//        		
+//        		//빽도 인경우
+//        		if(YutHash.get(value) == 5) {
+//        			for(int i=0; i<2; i++) {
+//        				if(NextPossibleMalPos[curIdx][YutHash.get(value) + i] > -1 ) {
+//                			possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)+ i]);
+//            			}
+//        			}
+//        			
+//        		}else {
+//            		possible.add(NextPossibleMalPos[curIdx][YutHash.get(value)]);
+//        		}
+//
+//    		}
+//   	
+//		}
+//		
+//		if(PlayerNum==1) {
+//			//SituationTextArea.append("P1의 위치 : "+ curIdx + ", 가능한 좌표 : ");
+//			CurSelP1MalPos=curIdx;
+//		}else {
+//			//SituationTextArea.append("P2의 위치 : "+ curIdx);
+//			CurSelP2MalPos = curIdx;
+//		}
+////		for(int i : possible) {
+////			SituationTextArea.append( i + ", ");
+////		}
+////		SituationTextArea.append("\n");
+//		
+//		return possible;
+//	}
 
 	private int getMalPositionIdx(int malNum, int playerNum) {
 		
