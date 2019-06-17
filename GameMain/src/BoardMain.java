@@ -666,9 +666,7 @@ public class BoardMain extends JFrame implements ActionListener , Serializable{
 		player.RemainCnt++;
 
 	}
-	public void testPrint() {
-		
-	}
+	
 	public void SetMalPos() {
 		for(int i = 0; i<4; i++) {
 			//System.out.println(P1.mal.CurMalPos[0][i]+ " , " + P1.mal.CurMalPos[1][i]);
