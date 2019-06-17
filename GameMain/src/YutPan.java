@@ -1,9 +1,10 @@
 import java.awt.Font;
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class YutPan {
+public class YutPan implements Serializable{
 	public JButton YutButton;
 
 	YutPan() {

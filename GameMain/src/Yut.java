@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-public class Yut {
+public class Yut implements Serializable{
 
 	public HashMap<String, Integer> YutHash = new HashMap<String, Integer>();
 

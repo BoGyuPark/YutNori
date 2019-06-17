@@ -6,9 +6,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 import java.util.*;
 
-public class BoardMain extends JFrame implements ActionListener {
+public class BoardMain extends JFrame implements ActionListener , Serializable{
 
 	final int MarkWidthSize = 27, MarkHeightSize = 28;
 
@@ -490,6 +491,7 @@ public class BoardMain extends JFrame implements ActionListener {
 			else {
 				PlayerMove(nextIdx, P2, P1, true);
 			}
+			ButtonEnable();
 		}
 	}
 
@@ -583,6 +585,7 @@ public class BoardMain extends JFrame implements ActionListener {
 			SituationTextArea.append("Player " + player.MyPlayerNum + " Win!!!!!!!!!!!!!!!!  \n");
 			JOptionPane.showMessageDialog(null, "Player " + player.MyPlayerNum + " Win!!", "윷놀이 승자",
 					JOptionPane.INFORMATION_MESSAGE);
+			 System.exit(0);
 		}
 
 		// 아직 이동할 수 있는 기회가 더 있는 경우
@@ -663,7 +666,29 @@ public class BoardMain extends JFrame implements ActionListener {
 		player.RemainCnt++;
 
 	}
+	public void testPrint() {
+		
+	}
+	public void SetMalPos() {
+		for(int i = 0; i<4; i++) {
+			//System.out.println(P1.mal.CurMalPos[0][i]+ " , " + P1.mal.CurMalPos[1][i]);
+			SituationTextArea.append(P1.mal.CurMalPos[0][i]+ " , " + P1.mal.CurMalPos[1][i]+"\n");
 
+			//contentPane.revalidate();
+			P1.mal.MalList[i].repaint();
+			P1.mal.MalList[i].revalidate();
+
+			P1.mal.MalList[i].setLocation(P1.mal.CurMalPos[0][i], P1.mal.CurMalPos[1][i]);
+			P2.mal.MalList[i].setLocation(P2.mal.CurMalPos[0][i], P2.mal.CurMalPos[1][i]);
+			P1.mal.MalList[i].setVisible(true);
+			P2.mal.MalList[i].setVisible(true);
+			//contentPane.add(P1.mal.MalList[i]);
+
+		}
+		System.out.println();
+	}
+	
+	
 	private void ChangeMalPos(Player player, int curIdx, int[][] PosInfo, int nextBoardIdx) {
 
 		// 같은 말, 상대 말도 아닌 경우
@@ -671,8 +696,8 @@ public class BoardMain extends JFrame implements ActionListener {
 		player.mal.CurMalPos[0][curIdx] = PosInfo[0][nextBoardIdx];
 		player.mal.CurMalPos[1][curIdx] = PosInfo[1][nextBoardIdx];
 	}
-// 다음 이동할 보드 위치에 나의 말이나 적의 말이 있는 경우 체크하여, 존재한다면 해당 말의 인덱스를 반환.
-
+	
+	// 다음 이동할 보드 위치에 나의 말이나 적의 말이 있는 경우 체크하여, 존재한다면 해당 말의 인덱스를 반환.
 	private int OverLapCheck(int NextPlayerIdx, int PlayerMalPosition[][]) {
 
 		for (int i = 0; i < 4; i++) {
@@ -709,7 +734,7 @@ public class BoardMain extends JFrame implements ActionListener {
 				else {
 					Deselect(P2, true);
 				}
-
+				ButtonEnable();
 				break;
 
 //            	case KeyEvent.VK_Q:	
@@ -726,11 +751,16 @@ public class BoardMain extends JFrame implements ActionListener {
 		}
 	}
 
-	// 플레이어 1의 말을 선택하는 경우
+	// 플레이어 말을 선택하는 경우
 	private class PlayerActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 
 			JButton jb = (JButton) ae.getSource();
+			System.out.println(ae.getActionCommand());
+			
+			//누른 버튼을 제외하고 버튼 비활성화
+			ButtonUnable();
+			jb.setEnabled(true);
 			
 			Player SelectPlayer = CheckPlayer(jb);
 			
@@ -775,6 +805,20 @@ public class BoardMain extends JFrame implements ActionListener {
 		}
 	
 	}
+
+    public void ButtonUnable() {
+    	for(int i = 0; i<4; i++) {
+    		P1.mal.MalList[i].setEnabled(false);
+    		P2.mal.MalList[i].setEnabled(false);
+    	}
+    }
+    
+    public void ButtonEnable() {
+    	for(int i = 0; i<4; i++) {
+    		P1.mal.MalList[i].setEnabled(true);
+    		P2.mal.MalList[i].setEnabled(true);
+    	}
+    }
 
 	public Player CheckPlayer(JButton jb) {
 		Player tempPlayer = P1;

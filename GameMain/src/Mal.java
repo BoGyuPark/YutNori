@@ -1,11 +1,12 @@
 
 import java.awt.Container;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class Mal {
+public class Mal implements Serializable{
 	final int CharWidthSize = 55, CharHeightSize = 60;
 	int PlayerNum;
 	String[][] ImageAddress = { { "GUI\\char1.png", "GUI\\char1_2.png", "GUI\\char1_3.png", "GUI\\char1_4.png" },

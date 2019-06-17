@@ -1,9 +1,11 @@
 import java.awt.Container;
+import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.*;
 
 import javax.swing.JLabel;
 
-public class Player {
+public class Player implements Serializable {
 	JLabel PlayerState;
 	int RemainCnt = 1;
 	int GoalInMalCnt = 0;
@@ -12,6 +14,7 @@ public class Player {
 	ArrayList<IntString> InfoOfNextPos;
 	public int CurIdx;
 
+	String NickName;
 	int MyPlayerNum;
 	int MalRow;
 	String MalName;
